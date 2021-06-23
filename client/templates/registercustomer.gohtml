@@ -32,7 +32,7 @@
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
               <a class="dropdown-item" href="/login">Login</a>
-              <a class="dropdown-item" href="/register">Register</a>
+              <a class="dropdown-item" href="/register/customer">Register</a>
             </div>
           </div>
         </div>
@@ -43,48 +43,45 @@
         <div style="text-align:center" class="mb-5">
             <h3>Register As...</h3>
         </div>
-        <form method="POST">
-          <div class="d-flex justify-content-around">
-            <div>
-              <h3>Customer</h3><br>
-              <div class="form-group">
-                <label for="customer_email">Email address</label>
-                <input type="email" class="form-control" id="customer_email" name="customer_email" autocomplete="off" aria-describedby="emailHelp">
-                <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
-              </div>
-              <div class="form-group">
-                <label for="customer_username">Username</label>
-                <input type="text" class="form-control" id="customer_username" name="customer_username" autocomplete="off">
-              </div>
-              <div class="form-group">
-                <label for="customer_password">Password</label>
-                <input type="password" class="form-control" id="customer_password" name="customer_password">
-              </div>
-            </div>
-            <div>
-                <h3>Business Owner</h3><br>
-                <div class="form-group">
-                  <label for="bowner_email">Email address</label>
-                  <input type="email" class="form-control" id="bowner_email" name="bowner_email" autocomplete="off" aria-describedby="emailHelp">
-                  <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
-                </div>
-                <div class="form-group">
-                    <label for="bowner_contact">Contact</label>
-                    <input type="text" class="form-control" id="bowner_contact" name="bowner_contact" autocomplete="off">
-                  </div>
-                <div class="form-group">
-                  <label for="bowner_password">Password</label>
-                  <input type="password" class="form-control" id="bowner_password" name="bowner_password">
+        <div class="card">
+            <div class="card-body">
+                <nav class="navbar navbar-expand-lg navbar-light bg-light d-flex justify-content-center flex-column align-items-center mb-5">
+                    <div>
+                      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                      </button>
+                      <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                        <div class="navbar-nav d-flex" style="text-align:center">
+                          <a class="nav-link active" style="font-weight:bold;" href="/register/customer">CUSTOMER</a>
+                          <a class="nav-link" href="/register/bowner">BUSINESS OWNER</a>
+                        </div>
+                      </div>
+                    </div>
+                </nav>
+                <div>
+                    <form method="POST">
+                        <div>
+                            <div class="form-group">
+                              <label for="customer_email">Email address</label>
+                              <input type="email" class="form-control" id="customer_email" name="customer_email" autocomplete="off" aria-describedby="emailHelp">
+                              <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+                            </div>
+                            <div class="form-group">
+                              <label for="customer_username">Username</label>
+                              <input type="text" class="form-control" id="customer_username" name="customer_username" autocomplete="off">
+                            </div>
+                            <div class="form-group">
+                              <label for="customer_password">Password</label>
+                              <input type="password" class="form-control" id="customer_password" name="customer_password">
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-end m-3">
+                            <button type="submit" class="btn btn-dark">Register</button>
+                        </div>
+                    </form>
                 </div>
             </div>
           </div>
-          <div class="mt-5 d-flex justify-content-center">
-            <a href="/">
-              <button type="button" class="btn btn-dark mr-2">Back To Home</button>
-            </a>
-            <button type="submit" class="btn btn-dark">Register</button>
-          </div>
-        </form>
     </div>
     
 

@@ -15,7 +15,8 @@ func main() {
 	r := mux.NewRouter()
 	r.HandleFunc("/", Index)
 	r.HandleFunc("/login", Login)
-	r.HandleFunc("/register", Register)
+	r.HandleFunc("/register/customer", RegisterCustomer)
+	r.HandleFunc("/register/bowner", RegisterBowner)
 	r.HandleFunc("/listing/id/view", ViewListing)
 	r.HandleFunc("/listing/id/view/review", AddReview)
 	r.HandleFunc("/bowner/profile", BownerProfile)
@@ -31,8 +32,12 @@ func Index(w http.ResponseWriter, r *http.Request) {
 	Tpl.ExecuteTemplate(w, "index.gohtml", nil)
 }
 
-func Register(w http.ResponseWriter, r *http.Request) {
-	Tpl.ExecuteTemplate(w, "register.gohtml", nil)
+func RegisterCustomer(w http.ResponseWriter, r *http.Request) {
+	Tpl.ExecuteTemplate(w, "registercustomer.gohtml", nil)
+}
+
+func RegisterBowner(w http.ResponseWriter, r *http.Request) {
+	Tpl.ExecuteTemplate(w, "registerbowner.gohtml", nil)
 }
 
 func Login(w http.ResponseWriter, r *http.Request) {
