@@ -20,15 +20,20 @@ func LengthValidator(input string, requiredLength int) error {
 	return nil
 }
 
-func FormValidatorForString(formValues map[string]StringInput) map[string]string {
+func FormValidatorForString(formValues map[string]StringInput) (map[string]string, bool) {
 	errorsList := map[string]string{}
+	errCount := 0
 	for key, value := range formValues {
 		err := LengthValidator(value.Value, value.RequiredLength)
 		if err != nil {
 			errorsList[key] = err.Error()
+			errCount++
 		} else {
 			errorsList[key] = ""
 		}
 	}
-	return errorsList
+	if errCount > 0 {
+		return errorsList, false
+	}
+	return errorsList, true
 }
