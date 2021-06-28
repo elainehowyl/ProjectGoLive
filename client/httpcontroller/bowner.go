@@ -12,6 +12,7 @@ type BOwner struct {
 	Email    string
 	Contact  string
 	Password string
+	Token    string
 }
 
 func AddBOwner(bowner map[string]string, c chan error) {
@@ -29,4 +30,13 @@ func AddBOwner(bowner map[string]string, c chan error) {
 		return
 	}
 	c <- nil
+}
+
+func GetBOwner(loginCredentials map[string]string, c chan error) {
+	loginCredentialsJSON, _ := json.Marshal(loginCredentials)
+	response, err := http.Post("baseURL", "application/json", bytes.NewBuffer(loginCredentialsJSON))
+	if err != nil {
+		c <- err
+		return
+	}
 }

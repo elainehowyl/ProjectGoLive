@@ -12,6 +12,7 @@ type Customer struct {
 	Email    string
 	Username string
 	Password string
+	Token    string
 }
 
 func AddCustomer(customer map[string]string) error {
@@ -31,3 +32,5 @@ func AddCustomer(customer map[string]string) error {
 	//c <- nil
 	return nil
 }
+
+func GetCustomer(loginCredentials map[string]string) {}

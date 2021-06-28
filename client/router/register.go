@@ -5,8 +5,6 @@ import (
 	"ProjectGoLiveElaine/ProjectGoLive/client/validator"
 	"fmt"
 	"net/http"
-
-	"golang.org/x/crypto/bcrypt"
 )
 
 func RegisterCustomer(w http.ResponseWriter, r *http.Request) {
@@ -30,11 +28,11 @@ func RegisterCustomer(w http.ResponseWriter, r *http.Request) {
 		errorsList, passed = validator.FormValidatorForString(formValues)
 		if passed {
 			//fmt.Println("serving data to api server")
-			encryptedpw, _ := bcrypt.GenerateFromPassword([]byte(r.FormValue("customer_password")), bcrypt.MinCost)
+			//encryptedpw, _ := bcrypt.GenerateFromPassword([]byte(r.FormValue("customer_password")), bcrypt.MinCost)
 			newCustomer := map[string]string{
 				"email":    r.FormValue("customer_email"),
 				"username": r.FormValue("customer_username"),
-				"password": string(encryptedpw[:]),
+				"password": r.FormValue("customer_password"),
 			}
 			// c := make(chan error)
 			//go httpcontroller.AddCustomer(newCustomer, c)
@@ -42,7 +40,11 @@ func RegisterCustomer(w http.ResponseWriter, r *http.Request) {
 			err := httpcontroller.AddCustomer(newCustomer)
 			if err != nil {
 				fmt.Printf("display the error: %v in template or something\n", err)
+				// use errorsList??
+				// or redirect?
 			}
+			http.Redirect(w, r, "/login", http.StatusSeeOther)
+			return
 		}
 	}
 	Tpl.ExecuteTemplate(w, "registercustomer.gohtml", errorsList)
@@ -68,11 +70,11 @@ func RegisterBOwner(w http.ResponseWriter, r *http.Request) {
 		}
 		errorsList, passed = validator.FormValidatorForString(formValues)
 		if passed {
-			encryptedpw, _ := bcrypt.GenerateFromPassword([]byte(r.FormValue("bowner_password")), bcrypt.MinCost)
+			//encryptedpw, _ := bcrypt.GenerateFromPassword([]byte(r.FormValue("bowner_password")), bcrypt.MinCost)
 			newBowner := map[string]string{
 				"email":    r.FormValue("bowner_email"),
 				"contact":  r.FormValue("bowner_contact"),
-				"password": string(encryptedpw[:]),
+				"password": r.FormValue("bowner_password"),
 			}
 			c := make(chan error)
 			go httpcontroller.AddBOwner(newBowner, c)
@@ -80,6 +82,8 @@ func RegisterBOwner(w http.ResponseWriter, r *http.Request) {
 			if err != nil {
 				fmt.Printf("display the error: %v in template or something\n", err)
 			}
+			http.Redirect(w, r, "/login", http.StatusSeeOther)
+			return
 		}
 	}
 	Tpl.ExecuteTemplate(w, "registerbowner.gohtml", errorsList)
