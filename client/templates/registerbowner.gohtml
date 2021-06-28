@@ -63,17 +63,22 @@
                         <div>
                             <div class="form-group">
                               <label for="bowner_email">Email address</label>
-                              <input type="email" class="form-control" id="bowner_email" name="bowner_email" autocomplete="off" aria-describedby="emailHelp">
-                              <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+                              <input type="email" class="form-control" id="bowner_email" name="bowner_email" autocomplete="off">
+                              <p style="color:red">{{.bowner_email}}</p>
                             </div>
                             <div class="form-group">
                               <label for="bowner_contact">Contact Number</label>
                               <input type="text" class="form-control" id="bowner_contact" name="bowner_contact" autocomplete="off">
+                              <p style="color:red">{{.bowner_contact}}</p>
                             </div>
                             <div class="form-group">
                               <label for="bowner_password">Password</label>
-                              <input type="password" class="form-control" id="bowner_password" name="bowner_password">
+                              <input type="password" class="form-control" id="bowner_password" name="bowner_password" autocomplete="off">
+                              <p style="color:red">{{.bowner_password}}</p>
                             </div>
+                        </div>
+                        <div>
+                           <p style="color:red">{{.response_error}}</p>
                         </div>
                         <div class="d-flex justify-content-end m-3">
                             <button type="submit" class="btn btn-dark">Register</button>

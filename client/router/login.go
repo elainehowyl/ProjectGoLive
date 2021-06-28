@@ -1,10 +1,10 @@
 package router
 
 import (
+	"ProjectGoLiveElaine/ProjectGoLive/client/httpcontroller"
 	"ProjectGoLiveElaine/ProjectGoLive/client/validator"
+	"fmt"
 	"net/http"
-
-	"golang.org/x/crypto/bcrypt"
 )
 
 func Login(w http.ResponseWriter, r *http.Request) {
@@ -23,14 +23,32 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		}
 		errorsList, passed = validator.FormValidatorForString(formValues)
 		if passed {
-			encryptedpw, _ := bcrypt.GenerateFromPassword([]byte(r.FormValue("customer_password")), bcrypt.MinCost)
+			//encryptedpw, _ := bcrypt.GenerateFromPassword([]byte(r.FormValue("customer_password")), bcrypt.MinCost)
 			loginCredentials := map[string]string{
 				"email":    r.FormValue("login_email"),
-				"password": string(encryptedpw[:]),
+				"password": r.FormValue("login_password"),
 			}
 			if r.FormValue("role") == "customer" {
+				c := make(chan error)
+				go httpcontroller.ProcessCustomerLogin(loginCredentials, c)
+				err := <-c
+				if err != nil {
+					fmt.Println("Response Error on login:", err)
+					errorsList["response_error"] = err.Error()
+				} else {
+					http.Redirect(w, r, "/", http.StatusSeeOther)
+				}
 			}
 			if r.FormValue("role") == "bowner" {
+				c := make(chan error)
+				go httpcontroller.ProcessBOwnerLogin(loginCredentials, c)
+				err := <-c
+				if err != nil {
+					fmt.Println("Response Error on login", err)
+					errorsList["response_error"] = err.Error()
+				} else {
+					http.Redirect(w, r, "/", http.StatusSeeOther)
+				}
 			}
 		}
 	}

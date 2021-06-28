@@ -27,24 +27,24 @@ func RegisterCustomer(w http.ResponseWriter, r *http.Request) {
 		}
 		errorsList, passed = validator.FormValidatorForString(formValues)
 		if passed {
-			//fmt.Println("serving data to api server")
-			//encryptedpw, _ := bcrypt.GenerateFromPassword([]byte(r.FormValue("customer_password")), bcrypt.MinCost)
 			newCustomer := map[string]string{
 				"email":    r.FormValue("customer_email"),
 				"username": r.FormValue("customer_username"),
 				"password": r.FormValue("customer_password"),
 			}
-			// c := make(chan error)
-			//go httpcontroller.AddCustomer(newCustomer, c)
-			// err := <- c
-			err := httpcontroller.AddCustomer(newCustomer)
+			c := make(chan error)
+			go httpcontroller.AddCustomer(newCustomer, c)
+			err := <-c
 			if err != nil {
 				fmt.Printf("display the error: %v in template or something\n", err)
+				errorsList["response_error"] = err.Error()
 				// use errorsList??
 				// or redirect?
+			} else {
+				http.Redirect(w, r, "/login", http.StatusSeeOther)
 			}
-			http.Redirect(w, r, "/login", http.StatusSeeOther)
-			return
+			// http.Redirect(w, r, "/login", http.StatusSeeOther)
+			// return
 		}
 	}
 	Tpl.ExecuteTemplate(w, "registercustomer.gohtml", errorsList)
@@ -81,9 +81,12 @@ func RegisterBOwner(w http.ResponseWriter, r *http.Request) {
 			err := <-c
 			if err != nil {
 				fmt.Printf("display the error: %v in template or something\n", err)
+				errorsList["response_error"] = err.Error()
+			} else {
+				http.Redirect(w, r, "/login", http.StatusSeeOther)
 			}
-			http.Redirect(w, r, "/login", http.StatusSeeOther)
-			return
+			// http.Redirect(w, r, "/login", http.StatusSeeOther)
+			// return
 		}
 	}
 	Tpl.ExecuteTemplate(w, "registerbowner.gohtml", errorsList)
