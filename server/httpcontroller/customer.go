@@ -25,7 +25,7 @@ func ProcessCustomerRegistration(w http.ResponseWriter, r *http.Request, db *sql
 			reqBody, err := ioutil.ReadAll(r.Body)
 			if err != nil {
 				w.WriteHeader(http.StatusUnprocessableEntity)
-				w.Write([]byte("unable to process request"))
+				w.Write([]byte("Unable to process request"))
 				return
 			}
 			var customer CustomerDetails
@@ -35,11 +35,11 @@ func ProcessCustomerRegistration(w http.ResponseWriter, r *http.Request, db *sql
 			err = <-c
 			if err != nil {
 				w.WriteHeader(http.StatusUnauthorized)
-				w.Write([]byte("Registration failed. Email was already registered."))
+				w.Write([]byte("Email was already registered"))
 				return
 			}
 			w.WriteHeader(http.StatusCreated)
-			w.Write([]byte("account created successfully"))
+			w.Write([]byte("Account created successfully"))
 		}
 	}
 }
@@ -50,17 +50,17 @@ func ProcessCustomerLogin(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 			reqBody, err := ioutil.ReadAll(r.Body)
 			if err != nil {
 				w.WriteHeader(http.StatusUnprocessableEntity)
-				w.Write([]byte("unable to process request"))
+				w.Write([]byte("Unable to process request"))
 				return
 			}
 			var customer CustomerCredentials
 			json.Unmarshal(reqBody, &customer)
 			c := make(chan error)
-			go database.VerifyBOwnerIdentity(db, customer.Email, customer.Password, c)
+			go database.VerifyCustomerIdentity(db, customer.Email, customer.Password, c)
 			err = <-c
 			if err != nil {
 				w.WriteHeader(http.StatusUnauthorized)
-				w.Write([]byte("username or/and password does not match"))
+				w.Write([]byte("Username or/and password does not match"))
 				return
 			}
 			//http.SetCookie(w, myCookie)

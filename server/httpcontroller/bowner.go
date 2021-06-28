@@ -35,7 +35,7 @@ func ProcessBOwnerRegistration(w http.ResponseWriter, r *http.Request, db *sql.D
 			err = <-c
 			if err != nil {
 				w.WriteHeader(http.StatusUnauthorized)
-				w.Write([]byte("Registration failed. Email was already registered."))
+				w.Write([]byte("Email was already registered"))
 				return
 			}
 			w.WriteHeader(http.StatusCreated)
@@ -50,7 +50,7 @@ func ProcessBOwnerLogin(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 			reqBody, err := ioutil.ReadAll(r.Body)
 			if err != nil {
 				w.WriteHeader(http.StatusUnprocessableEntity)
-				w.Write([]byte("unable to process request"))
+				w.Write([]byte("Unable to process request"))
 				return
 			}
 			var bOwner BOwnerCredentials
@@ -60,7 +60,7 @@ func ProcessBOwnerLogin(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 			err = <-c
 			if err != nil {
 				w.WriteHeader(http.StatusUnauthorized)
-				w.Write([]byte("username or/and password does not match"))
+				w.Write([]byte("Username or/and password does not match"))
 				return
 			}
 			//http.SetCookie(w, myCookie)

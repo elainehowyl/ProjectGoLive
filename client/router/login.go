@@ -28,6 +28,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 				"email":    r.FormValue("login_email"),
 				"password": r.FormValue("login_password"),
 			}
+			fmt.Println("ROLE FROM FORM: ", r.FormValue("role"))
 			if r.FormValue("role") == "customer" {
 				c := make(chan error)
 				go httpcontroller.ProcessCustomerLogin(loginCredentials, c)

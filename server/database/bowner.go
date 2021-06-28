@@ -3,7 +3,6 @@ package database
 import (
 	"database/sql"
 	"errors"
-	"fmt"
 	"log"
 
 	"golang.org/x/crypto/bcrypt"
@@ -24,12 +23,14 @@ func AddBOwner(db *sql.DB, email, password, contact string, c chan error) {
 		c <- err
 		return
 	}
+	log.Println("successfully added new business owner into table")
 	c <- nil
 }
 
 func VerifyBOwnerIdentity(db *sql.DB, email string, password string, c chan error) {
-	result, err := db.Query("SELECT * FROM sample_user.User WHERE email= ?", email)
+	result, err := db.Query("SELECT * FROM proj_db.BOwner WHERE email= ?", email)
 	if err != nil {
+		log.Println(err)
 		c <- err
 		return
 	}
@@ -38,22 +39,26 @@ func VerifyBOwnerIdentity(db *sql.DB, email string, password string, c chan erro
 	for result.Next() {
 		err = result.Scan(&credentials.Id, &credentials.Email, &credentials.Password, &credentials.Contact)
 		if err != nil {
+			log.Println(err)
 			c <- err
 			return
 		}
 	}
 	// check if email exists
 	if credentials.Email == "" {
-		c <- errors.New("no user found")
-		fmt.Println("no user found")
+		err = errors.New("no user found")
+		c <- err
+		log.Println(err)
 		return
 	}
 	// check if password matches
 	err = bcrypt.CompareHashAndPassword([]byte(credentials.Password), []byte(password))
 	if err != nil {
-		c <- errors.New("password do not match")
-		fmt.Println("password do not match")
+		err = errors.New("password do not match")
+		c <- err
+		log.Println(err)
 		return
 	}
+	log.Println("business owner verification passed")
 	c <- nil
 }

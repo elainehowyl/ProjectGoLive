@@ -3,7 +3,7 @@ package router
 import (
 	"ProjectGoLiveElaine/ProjectGoLive/server/httpcontroller"
 	"database/sql"
-	"fmt"
+	"log"
 	"net/http"
 
 	_ "github.com/go-sql-driver/mysql"
@@ -13,9 +13,11 @@ import (
 func SetUp() {
 	db, err := sql.Open("mysql", "root:password@tcp(127.0.0.1:53361)/proj_db")
 	if err != nil {
-		panic(err.Error())
+		log.Panicln(err.Error())
+		//panic(err.Error())
 	} else {
-		fmt.Println("Database opened")
+		log.Println("Database opened")
+		//fmt.Println("Database opened")
 	}
 	defer db.Close()
 	r := mux.NewRouter()
@@ -31,5 +33,6 @@ func SetUp() {
 	r.HandleFunc("/customer/register", func(w http.ResponseWriter, r *http.Request) {
 		httpcontroller.ProcessCustomerRegistration(w, r, db)
 	})
+	r.HandleFunc("/favicon.ico", http.NotFound)
 	http.ListenAndServe(":5000", r)
 }
