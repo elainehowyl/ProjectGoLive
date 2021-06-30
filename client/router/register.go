@@ -69,7 +69,6 @@ func RegisterBOwner(w http.ResponseWriter, r *http.Request) {
 			},
 		}
 		errorsList, passed = validator.FormValidatorForRegistration(formValues)
-		fmt.Println("ERRORSLIST: ", errorsList)
 		if passed {
 			//encryptedpw, _ := bcrypt.GenerateFromPassword([]byte(r.FormValue("bowner_password")), bcrypt.MinCost)
 			newBowner := map[string]string{

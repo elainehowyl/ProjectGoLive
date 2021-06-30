@@ -55,6 +55,24 @@ func LengthValidator(input string, requiredLength int) error {
 	return nil
 }
 
+func FormValidatorForLogin(formValues map[string]StringInput) (map[string]string, bool) {
+	errorsList := map[string]string{}
+	errCount := 0
+	for key, value := range formValues {
+		err := LengthValidator(value.Value, value.RequiredLength)
+		if err != nil {
+			errorsList[key] = err.Error()
+			errCount++
+		} else {
+			errorsList[key] = ""
+		}
+	}
+	if errCount > 0 {
+		return errorsList, false
+	}
+	return errorsList, true
+}
+
 func FormValidatorForRegistration(formValues map[string]StringInput) (map[string]string, bool) {
 	errorsList := map[string]string{}
 	errCount := 0
@@ -69,7 +87,7 @@ func FormValidatorForRegistration(formValues map[string]StringInput) (map[string
 	}
 	passwordPassed := PasswordValidator(formValues["password"].Value)
 	if passwordPassed != nil {
-		errorsList["password"] = passwordPassed.Error()
+		errorsList["password_char"] = passwordPassed.Error()
 		errCount++
 	}
 	if errCount > 0 {
