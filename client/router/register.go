@@ -2,6 +2,7 @@ package router
 
 import (
 	"ProjectGoLiveElaine/ProjectGoLive/client/httpcontroller"
+	"ProjectGoLiveElaine/ProjectGoLive/client/sanitizer"
 	"ProjectGoLiveElaine/ProjectGoLive/client/validator"
 	"fmt"
 	"net/http"
@@ -9,6 +10,7 @@ import (
 
 func RegisterCustomer(w http.ResponseWriter, r *http.Request) {
 	var passed bool
+	var passed2 bool
 	errorsList := make(map[string]string)
 	if r.Method == http.MethodPost {
 		formValues := map[string]validator.StringInput{
@@ -26,7 +28,8 @@ func RegisterCustomer(w http.ResponseWriter, r *http.Request) {
 			},
 		}
 		errorsList, passed = validator.FormValidatorForRegistration(formValues)
-		if passed {
+		errorsList, passed2 = sanitizer.RegistrationSanitization(formValues, errorsList)
+		if passed && passed2 {
 			newCustomer := map[string]string{
 				"email":    r.FormValue("customer_email"),
 				"username": r.FormValue("customer_username"),
@@ -38,13 +41,9 @@ func RegisterCustomer(w http.ResponseWriter, r *http.Request) {
 			if err != nil {
 				fmt.Printf("display the error: %v in template or something\n", err)
 				errorsList["response_error"] = err.Error()
-				// use errorsList??
-				// or redirect?
 			} else {
 				http.Redirect(w, r, "/login", http.StatusSeeOther)
 			}
-			// http.Redirect(w, r, "/login", http.StatusSeeOther)
-			// return
 		}
 	}
 	Tpl.ExecuteTemplate(w, "registercustomer.gohtml", errorsList)
@@ -52,6 +51,7 @@ func RegisterCustomer(w http.ResponseWriter, r *http.Request) {
 
 func RegisterBOwner(w http.ResponseWriter, r *http.Request) {
 	var passed bool
+	var passed2 bool
 	errorsList := make(map[string]string)
 	if r.Method == http.MethodPost {
 		formValues := map[string]validator.StringInput{
@@ -69,8 +69,8 @@ func RegisterBOwner(w http.ResponseWriter, r *http.Request) {
 			},
 		}
 		errorsList, passed = validator.FormValidatorForRegistration(formValues)
-		if passed {
-			//encryptedpw, _ := bcrypt.GenerateFromPassword([]byte(r.FormValue("bowner_password")), bcrypt.MinCost)
+		errorsList, passed2 = sanitizer.RegistrationSanitization(formValues, errorsList)
+		if passed && passed2 {
 			newBowner := map[string]string{
 				"email":    r.FormValue("bowner_email"),
 				"contact":  r.FormValue("bowner_contact"),
@@ -85,8 +85,6 @@ func RegisterBOwner(w http.ResponseWriter, r *http.Request) {
 			} else {
 				http.Redirect(w, r, "/login", http.StatusSeeOther)
 			}
-			// http.Redirect(w, r, "/login", http.StatusSeeOther)
-			// return
 		}
 	}
 	Tpl.ExecuteTemplate(w, "registerbowner.gohtml", errorsList)

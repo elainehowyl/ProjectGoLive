@@ -14,7 +14,7 @@ type StringInput struct {
 
 func SpecialCharValidator(password string) bool {
 	var special bool
-	specialChar := "!@#$%^&*"
+	specialChar := "!@#$%^*"
 	for _, char := range specialChar {
 		result := strings.Contains(password, string(char))
 		if result {
@@ -40,7 +40,7 @@ func PasswordValidator(password string) error {
 	specialChar := SpecialCharValidator(password)
 	upperCase := UpperCaseValidator(password)
 	if !specialChar || !upperCase {
-		return errors.New("Please ensure that your password contain at least ONE special character(!@#$%^&*) and ONE uppercase character")
+		return errors.New("Please ensure that your password contain at least ONE special character(!@#$%^*) and ONE uppercase character")
 	}
 	return nil
 }
