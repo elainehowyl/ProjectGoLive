@@ -10,7 +10,7 @@ import (
 
 func ProcessAddListing(listing map[string]interface{}, c chan error) {
 	listingJSON, _ := json.Marshal(listing)
-	response, err := http.Post(baseURL+"/listing/add", "application/json", bytes.NewBuffer([]byte(listingJSON)))
+	response, err := http.Post(baseURL+"/listing/add", "application/json", bytes.NewBuffer(listingJSON))
 	if err != nil {
 		c <- err
 		return

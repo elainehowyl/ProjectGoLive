@@ -32,16 +32,23 @@
         <div class="m-5">
           <form method="POST">
             <div class="form-group">
-                <label for="edit-item-name">Edit Item Name</label>
-                <input type="text" class="form-control" id="edit-item-name" name="edit-item-name" value="original name" autocomplete="off">
+                <label for="edit_item_name">Edit Item Name</label>
+                <input type="text" class="form-control" id="edit_item_name" name="edit_item_name" value="original name" autocomplete="off">
+                <p style="color:red">{{.edit_item_name}}</p>
               </div>
               <div class="form-group">
-                <label for="edit-item-price">Edit Price</label>
-                <input type="text" class="form-control" id="edit-item-price" name="edit-item-price" value="original price" autocomplete="off">
+                <label for="edit_item_price">Edit Price</label>
+                <input type="text" class="form-control" id="edit_item_price" name="edit_item_price" value="original price" autocomplete="off">
+                <p style="color:red">{{.edit_item_price}}</p>
+                <p style="color:red">{{.invalid_syntax}}</p>
               </div>
               <div class="form-group">
-                <label for="edit-item-description">Edit Description</label>
-                <textarea class="form-control" id="edit-item-description" rows="3" value="original description"></textarea>
+                <label for="edit_item_description">Edit Description</label>
+                <textarea class="form-control" id="edit_item_description" name="edit_item_description" rows="3" value="original description"></textarea>
+                <p style="color:red">{{.edit_item_description}}</p>
+              </div>
+              <div>
+                <p style="color:red">{{.response_error}}</p>
               </div>
               <div class="d-flex justify-content-end mt-3">
                 <button type="submit" class="btn btn-dark">Save Changes</button>
