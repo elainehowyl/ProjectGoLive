@@ -55,7 +55,7 @@ func LengthValidator(input string, requiredLength int) error {
 	return nil
 }
 
-func FormValidatorForLogin(formValues map[string]StringInput) (map[string]string, bool) {
+func GeneralFormValidator(formValues map[string]StringInput) (map[string]string, bool) {
 	errorsList := map[string]string{}
 	errCount := 0
 	for key, value := range formValues {

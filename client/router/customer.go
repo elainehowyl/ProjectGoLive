@@ -25,11 +25,13 @@ func AddReview(w http.ResponseWriter, r *http.Request) {
 			errMsgs["sanitization"] = err.Error()
 		}
 		if err == nil && err2 == nil {
-			formValues["add_review"] = review
-			formValues["customer_id"] = "?"
-			formValues["listing_id"] = "?"
+			reviewInfo := map[string]interface{}{
+				"add_review":  review,
+				"customer_id": 0,
+				"listing_id":  0,
+			}
 			c := make(chan error)
-			go httpcontroller.ProcessAddReview(formValues, c)
+			go httpcontroller.ProcessAddReview(reviewInfo, c)
 			err = <-c
 			if err != nil {
 				errMsgs["response_error"] = err.Error()

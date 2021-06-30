@@ -8,9 +8,9 @@ import (
 	"net/http"
 )
 
-func ProcessAddReview(review map[string]interface{}, c chan error) {
-	reviewJSON, _ := json.Marshal(review)
-	response, err := http.Post(baseURL+"/review/add", "application/json", bytes.NewBuffer(reviewJSON))
+func ProcessAddListing(listing map[string]interface{}, c chan error) {
+	listingJSON, _ := json.Marshal(listing)
+	response, err := http.Post(baseURL+"/listing/add", "application/json", bytes.NewBuffer([]byte(listingJSON)))
 	if err != nil {
 		c <- err
 		return

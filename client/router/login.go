@@ -21,7 +21,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 				RequiredLength: 1,
 			},
 		}
-		errorsList, passed = validator.FormValidatorForLogin(formValues)
+		errorsList, passed = validator.GeneralFormValidator(formValues)
 		if passed {
 			//encryptedpw, _ := bcrypt.GenerateFromPassword([]byte(r.FormValue("customer_password")), bcrypt.MinCost)
 			loginCredentials := map[string]string{
