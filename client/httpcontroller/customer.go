@@ -16,9 +16,9 @@ type Customer struct {
 	Token    string
 }
 
-func AddCustomer(customer map[string]string, c chan error) {
+func ProcessCustomerRegistration(customer map[string]string, c chan error) {
 	customerJSON, _ := json.Marshal(customer)
-	response, err := http.Post("http://localhost:5000/customer/register", "application/json", bytes.NewBuffer(customerJSON))
+	response, err := http.Post(baseURL+"/customer/register", "application/json", bytes.NewBuffer(customerJSON))
 	if err != nil {
 		c <- err
 		return
@@ -35,7 +35,7 @@ func AddCustomer(customer map[string]string, c chan error) {
 
 func ProcessCustomerLogin(credentials map[string]string, c chan error) {
 	credentialsJSON, _ := json.Marshal(credentials)
-	response, err := http.Post("http://localhost:5000/customer/login", "application/json", bytes.NewBuffer(credentialsJSON))
+	response, err := http.Post(baseURL+"/customer/login", "application/json", bytes.NewBuffer(credentialsJSON))
 	if err != nil {
 		c <- err
 		return

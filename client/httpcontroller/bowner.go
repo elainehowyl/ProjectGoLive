@@ -16,14 +16,9 @@ type BOwner struct {
 	Token    string
 }
 
-var (
-	myCookie *http.Cookie
-	client   http.Client
-)
-
-func AddBOwner(bowner map[string]string, c chan error) {
+func ProcessBOwnerRegistration(bowner map[string]string, c chan error) {
 	bownerJSON, _ := json.Marshal(bowner)
-	response, err := http.Post("http://localhost:5000/bowner/register", "application/json", bytes.NewBuffer(bownerJSON))
+	response, err := http.Post(baseURL+"/bowner/register", "application/json", bytes.NewBuffer(bownerJSON))
 	if err != nil {
 		c <- err
 		return
@@ -40,7 +35,7 @@ func AddBOwner(bowner map[string]string, c chan error) {
 
 func ProcessBOwnerLogin(credentials map[string]string, c chan error) {
 	credentialsJSON, _ := json.Marshal(credentials)
-	response, err := http.Post("http://localhost:5000/customer/login", "application/json", bytes.NewBuffer(credentialsJSON))
+	response, err := http.Post(baseURL+"/customer/login", "application/json", bytes.NewBuffer(credentialsJSON))
 	if err != nil {
 		c <- err
 		return

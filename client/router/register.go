@@ -36,7 +36,7 @@ func RegisterCustomer(w http.ResponseWriter, r *http.Request) {
 				"password": r.FormValue("customer_password"),
 			}
 			c := make(chan error)
-			go httpcontroller.AddCustomer(newCustomer, c)
+			go httpcontroller.ProcessCustomerRegistration(newCustomer, c)
 			err := <-c
 			if err != nil {
 				fmt.Printf("display the error: %v in template or something\n", err)
@@ -77,7 +77,7 @@ func RegisterBOwner(w http.ResponseWriter, r *http.Request) {
 				"password": r.FormValue("bowner_password"),
 			}
 			c := make(chan error)
-			go httpcontroller.AddBOwner(newBowner, c)
+			go httpcontroller.ProcessBOwnerRegistration(newBowner, c)
 			err := <-c
 			if err != nil {
 				fmt.Printf("display the error: %v in template or something\n", err)

@@ -44,8 +44,11 @@
         <div class="m-5">
           <form method="POST">
             <div class="form-group">
-              <textarea class="form-control" id="edit-item-description" rows="3" placeholder="Say something nice to the seller!"></textarea>
+              <textarea class="form-control" id="add_review" name="add_review" rows="3" placeholder="Say something nice to the seller!"></textarea>
             </div>
+            {{.validation}}
+            {{.sanitization}}
+            {{.response_error}}
             <div class="d-flex justify-content-end mt-3">
               <button type="submit" class="btn btn-dark">Add Review</button>
             </div>
