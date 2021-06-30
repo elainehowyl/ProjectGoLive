@@ -38,10 +38,12 @@
               <div class="form-group">
                 <label for="shop_title">Shop Title</label>
                 <input type="text" class="form-control" id="shop_title" name="shop_title" autocomplete="off">
+                <p style="color:red">{{.shop_title}}</p>
               </div>
               <div class="form-group">
                 <label for="shop_description">Shop Description</label>
                 <textarea class="form-control" id="shop_description" rows="3" name="shop_description" placeholder="A short description about your shop"></textarea>
+                <p style="color:red">{{.shop_description}}</p>
               </div>
               <div>
                 <label for="shop_category">Category</label>
@@ -68,6 +70,7 @@
                 <input type="text" class="form-control" id="website_url" name="website_url" autocomplete="off">
               </div>
             </div>
+            <p style="color:red">{{.response_error}}</p>
             <div class="d-flex justify-content-end">
               <button type="submit" class="btn btn-dark">Add Listing</button>
             </div>

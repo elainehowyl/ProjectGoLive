@@ -12,7 +12,6 @@ func ViewListing(w http.ResponseWriter, r *http.Request) {
 }
 
 func AddReview(w http.ResponseWriter, r *http.Request) {
-	formValues := make(map[string]string)
 	errMsgs := make(map[string]string)
 	if r.Method == http.MethodPost {
 		review := r.FormValue("add_review")
