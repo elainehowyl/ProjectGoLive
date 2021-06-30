@@ -20,12 +20,12 @@ func RegisterCustomer(w http.ResponseWriter, r *http.Request) {
 				Value:          r.FormValue("customer_username"),
 				RequiredLength: 6,
 			},
-			"customer_password": {
+			"password": {
 				Value:          r.FormValue("customer_password"),
 				RequiredLength: 12,
 			},
 		}
-		errorsList, passed = validator.FormValidatorForString(formValues)
+		errorsList, passed = validator.FormValidatorForRegistration(formValues)
 		if passed {
 			newCustomer := map[string]string{
 				"email":    r.FormValue("customer_email"),
@@ -63,12 +63,13 @@ func RegisterBOwner(w http.ResponseWriter, r *http.Request) {
 				Value:          r.FormValue("bowner_contact"),
 				RequiredLength: 8,
 			},
-			"bowner_password": {
+			"password": {
 				Value:          r.FormValue("bowner_password"),
 				RequiredLength: 12,
 			},
 		}
-		errorsList, passed = validator.FormValidatorForString(formValues)
+		errorsList, passed = validator.FormValidatorForRegistration(formValues)
+		fmt.Println("ERRORSLIST: ", errorsList)
 		if passed {
 			//encryptedpw, _ := bcrypt.GenerateFromPassword([]byte(r.FormValue("bowner_password")), bcrypt.MinCost)
 			newBowner := map[string]string{

@@ -11,7 +11,7 @@ import (
 )
 
 func SetUp() {
-	db, err := sql.Open("mysql", "root:password@tcp(127.0.0.1:53361)/proj_db")
+	db, err := sql.Open("mysql", "root:password@tcp(127.0.0.1:61307)/proj_db")
 	if err != nil {
 		log.Panicln(err.Error())
 		//panic(err.Error())

@@ -61,4 +61,5 @@ CREATE TABLE Review (
     FOREIGN KEY(listing_id) REFERENCES Listing(id)
 );
 
+
 INSERT INTO Category (title) VALUES ('Dim Sum');

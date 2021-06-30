@@ -3,11 +3,46 @@ package validator
 import (
 	"errors"
 	"fmt"
+	"strings"
+	"unicode"
 )
 
 type StringInput struct {
 	Value          string
 	RequiredLength int
+}
+
+func SpecialCharValidator(password string) bool {
+	var special bool
+	specialChar := "!@#$%^&*"
+	for _, char := range specialChar {
+		result := strings.Contains(password, string(char))
+		if result {
+			special = true
+		}
+	}
+	return special
+}
+
+func UpperCaseValidator(password string) bool {
+	var upper bool
+	for _, char := range password {
+		result := unicode.IsUpper(char)
+		if result {
+			upper = true
+		}
+
+	}
+	return upper
+}
+
+func PasswordValidator(password string) error {
+	specialChar := SpecialCharValidator(password)
+	upperCase := UpperCaseValidator(password)
+	if !specialChar || !upperCase {
+		return errors.New("Please ensure that your password contain at least ONE special character(!@#$%^&*) and ONE uppercase character")
+	}
+	return nil
 }
 
 func LengthValidator(input string, requiredLength int) error {
@@ -20,7 +55,7 @@ func LengthValidator(input string, requiredLength int) error {
 	return nil
 }
 
-func FormValidatorForString(formValues map[string]StringInput) (map[string]string, bool) {
+func FormValidatorForRegistration(formValues map[string]StringInput) (map[string]string, bool) {
 	errorsList := map[string]string{}
 	errCount := 0
 	for key, value := range formValues {
@@ -31,6 +66,11 @@ func FormValidatorForString(formValues map[string]StringInput) (map[string]strin
 		} else {
 			errorsList[key] = ""
 		}
+	}
+	passwordPassed := PasswordValidator(formValues["password"].Value)
+	if passwordPassed != nil {
+		errorsList["password"] = passwordPassed.Error()
+		errCount++
 	}
 	if errCount > 0 {
 		return errorsList, false

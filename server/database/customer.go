@@ -16,21 +16,23 @@ type Customer struct {
 }
 
 func AddCustomer(db *sql.DB, email, password, username string, c chan error) {
+	title := "Register"
 	encryptedpw, _ := bcrypt.GenerateFromPassword([]byte(password), bcrypt.MinCost)
 	_, err := db.Exec("INSERT INTO proj_db.Customer VALUES(?,?,?,?)", 0, email, username, encryptedpw)
 	if err != nil {
-		log.Println(err)
+		log.Printf("%v: %v\n", title, err)
 		c <- err
 		return
 	}
-	log.Println("successfully added new customer into table")
+	log.Printf("%v: successfully added new customer into table\n", title)
 	c <- nil
 }
 
 func VerifyCustomerIdentity(db *sql.DB, email string, password string, c chan error) {
+	title := "Login"
 	result, err := db.Query("SELECT * FROM proj_db.Customer WHERE email= ?", email)
 	if err != nil {
-		log.Println(err)
+		log.Printf("%v: %v\n", title, err)
 		c <- err
 		return
 	}
@@ -39,7 +41,7 @@ func VerifyCustomerIdentity(db *sql.DB, email string, password string, c chan er
 	for result.Next() {
 		err = result.Scan(&credentials.Id, &credentials.Email, &credentials.Username, &credentials.Password)
 		if err != nil {
-			log.Println(err)
+			log.Printf("%v: %v\n", title, err)
 			c <- err
 			return
 		}
@@ -47,7 +49,7 @@ func VerifyCustomerIdentity(db *sql.DB, email string, password string, c chan er
 	// check if email exists
 	if credentials.Email == "" {
 		err = errors.New("no user found")
-		log.Println(err)
+		log.Printf("%v: %v\n", title, err)
 		c <- err
 		return
 	}
@@ -55,10 +57,10 @@ func VerifyCustomerIdentity(db *sql.DB, email string, password string, c chan er
 	err = bcrypt.CompareHashAndPassword([]byte(credentials.Password), []byte(password))
 	if err != nil {
 		err = errors.New("password do not match")
-		log.Println(err)
+		log.Printf("%v: %v\n", title, err)
 		c <- err
 		return
 	}
-	log.Println("customer verification passed")
+	log.Printf("%v: customer verification passed", title)
 	c <- nil
 }
