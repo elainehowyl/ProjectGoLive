@@ -5,6 +5,8 @@ import (
 	"ProjectGoLiveElaine/ProjectGoLive/client/validator"
 	"net/http"
 	"strconv"
+
+	"github.com/gorilla/mux"
 )
 
 func MyProfile(w http.ResponseWriter, r *http.Request) {
@@ -55,6 +57,21 @@ func AddListing(w http.ResponseWriter, r *http.Request) {
 	Tpl.ExecuteTemplate(w, "addnewlisting.gohtml", errsList)
 }
 
+func DeleteListing(w http.ResponseWriter, r *http.Request) {
+	var alert string
+	params := mux.Vars(r)
+	listingId := params["listing_id"]
+	c := make(chan error)
+	go httpcontroller.ProcessDeleteListing(listingId, c)
+	err := <-c
+	if err != nil {
+		alert = err.Error()
+	} else {
+		http.Redirect(w, r, "/bowner/email", http.StatusSeeOther)
+	}
+	Tpl.ExecuteTemplate(w, "deleteresult.gohtml", alert)
+}
+
 func ViewMyListing(w http.ResponseWriter, r *http.Request) {
 	errorsList := make(map[string]string)
 	if r.Method == http.MethodPost {
@@ -95,4 +112,19 @@ func ViewMyListing(w http.ResponseWriter, r *http.Request) {
 
 func EditItem(w http.ResponseWriter, r *http.Request) {
 	Tpl.ExecuteTemplate(w, "edititem.gohtml", nil)
+}
+
+func DeleteItem(w http.ResponseWriter, r *http.Request) {
+	var alert string
+	params := mux.Vars(r)
+	itemId := params["item_id"]
+	c := make(chan error)
+	go httpcontroller.ProcessDeleteItem(itemId, c)
+	err := <-c
+	if err != nil {
+		alert = err.Error()
+	} else {
+		http.Redirect(w, r, "/bowner/email", http.StatusSeeOther)
+	}
+	Tpl.ExecuteTemplate(w, "deleteresult.gohtml", alert)
 }

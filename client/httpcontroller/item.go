@@ -24,3 +24,21 @@ func ProcessAddItem(item map[string]interface{}, c chan error) {
 	}
 	c <- nil
 }
+
+func ProcessDeleteItem(item_id string, c chan error) {
+	request, _ := http.NewRequest(http.MethodDelete, baseURL+"/item/"+item_id, nil)
+	client := &http.Client{}
+	response, err := client.Do(request)
+	if err != nil {
+		c <- err
+		return
+	}
+	if response.StatusCode != http.StatusOK {
+		defer response.Body.Close()
+		data, _ := ioutil.ReadAll(response.Body)
+		err := errors.New(string(data))
+		c <- err
+		return
+	}
+	c <- nil
+}

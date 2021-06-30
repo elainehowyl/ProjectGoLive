@@ -108,7 +108,7 @@
               </a>
             </td>
             <td>
-              <a href="/bowner/listing/id/delete">
+              <a href="/bowner/email/listing/1/item/2/edit">
                 <button id="delete" type="button" class="btn btn-dark"><span>Delete
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
                      <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
@@ -155,6 +155,9 @@
               <label for="item_description">Description</label>
               <textarea class="form-control" id="item_description" name="item_description" rows="3" placeholder="A short description about item"></textarea>
               <p style="color:red">{{.item_description}}</p>
+            </div>
+            <div>
+              <p style="color:red">{{.response_error}}</p>
             </div>
             <div class="d-flex justify-content-end">
               <button type="submit" class="btn btn-dark">Add To Menu</button>
