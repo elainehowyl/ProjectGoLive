@@ -4,13 +4,39 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 )
 
-func ProcessAddListing(listing map[string]interface{}, c chan error) {
+type Listing struct {
+	Id              int
+	ShopTitle       string
+	ShopDescription string
+	IgURL           string
+	FbURL           string
+	WebsiteURL      string
+	BownerID        int
+	CategoryID      int
+}
+
+func GetAllListing(c chan []Listing) {
+	response, err := http.Get(BaseURL + "/listing")
+	if err != nil {
+		fmt.Printf("The HTTP request failed with error %s\n", err)
+	} else {
+		if response.StatusCode == http.StatusOK {
+			defer response.Body.Close()
+			data, _ := ioutil.ReadAll(response.Body)
+			var listings map[string]Listing
+			json.Unmarshal([]byte(data), &listings)
+		}
+	}
+}
+
+func ProcessAddListing(listing Listing, c chan error) {
 	listingJSON, _ := json.Marshal(listing)
-	response, err := http.Post(baseURL+"/listing/add", "application/json", bytes.NewBuffer(listingJSON))
+	response, err := http.Post(BaseURL+"/listing/add", "application/json", bytes.NewBuffer(listingJSON))
 	if err != nil {
 		c <- err
 		return
@@ -26,7 +52,7 @@ func ProcessAddListing(listing map[string]interface{}, c chan error) {
 }
 
 func ProcessDeleteListing(listing_id string, c chan error) {
-	request, _ := http.NewRequest(http.MethodDelete, baseURL+"/listing"+listing_id, nil)
+	request, _ := http.NewRequest(http.MethodDelete, BaseURL+"/listing"+listing_id, nil)
 	client := &http.Client{}
 	response, err := client.Do(request)
 	if err != nil {

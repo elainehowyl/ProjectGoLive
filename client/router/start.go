@@ -28,6 +28,6 @@ func RegisterRoutes() {
 	r.HandleFunc("/bowner/email/listing/{listing_id}/item/{item_id}/edit", EditItem)
 	r.HandleFunc("/bowner/email/listing/{listing_id}/item/{item_id}/delete", DeleteItem)
 	r.HandleFunc("/favicon.ico", http.NotFound)
-	http.ListenAndServe(":8080", r)
-	//http.ListenAndServeTLS(":8080", "./cert.pem", "./key.pem", r)
+	//http.ListenAndServe(":8080", r)
+	http.ListenAndServeTLS(":8080", "./cert.pem", "./key.pem", r)
 }

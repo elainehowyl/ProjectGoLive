@@ -10,7 +10,7 @@ import (
 
 func ProcessAddReview(review map[string]interface{}, c chan error) {
 	reviewJSON, _ := json.Marshal(review)
-	response, err := http.Post(baseURL+"/review/add", "application/json", bytes.NewBuffer(reviewJSON))
+	response, err := http.Post(BaseURL+"/review/add", "application/json", bytes.NewBuffer(reviewJSON))
 	if err != nil {
 		c <- err
 		return

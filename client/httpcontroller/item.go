@@ -10,7 +10,7 @@ import (
 
 func ProcessAddItem(item map[string]interface{}, c chan error) {
 	itemJSON, _ := json.Marshal(item)
-	response, err := http.Post(baseURL+"/item/add", "application/json", bytes.NewBuffer(itemJSON))
+	response, err := http.Post(BaseURL+"/item/add", "application/json", bytes.NewBuffer(itemJSON))
 	if err != nil {
 		c <- err
 		return
@@ -27,7 +27,7 @@ func ProcessAddItem(item map[string]interface{}, c chan error) {
 
 func ProcessUpdateItem(item_id string, item map[string]interface{}, c chan error) {
 	itemJSON, _ := json.Marshal(item)
-	request, _ := http.NewRequest(http.MethodPut, baseURL+"/item/"+item_id, bytes.NewBuffer(itemJSON))
+	request, _ := http.NewRequest(http.MethodPut, BaseURL+"/item/"+item_id, bytes.NewBuffer(itemJSON))
 	request.Header.Set("Content-Type", "application/json")
 	client := &http.Client{}
 	response, err := client.Do(request)
@@ -46,7 +46,7 @@ func ProcessUpdateItem(item_id string, item map[string]interface{}, c chan error
 }
 
 func ProcessDeleteItem(item_id string, c chan error) {
-	request, _ := http.NewRequest(http.MethodDelete, baseURL+"/item/"+item_id, nil)
+	request, _ := http.NewRequest(http.MethodDelete, BaseURL+"/item/"+item_id, nil)
 	client := &http.Client{}
 	response, err := client.Do(request)
 	if err != nil {

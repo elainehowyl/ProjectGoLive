@@ -1,6 +1,8 @@
 package main
 
-import "ProjectGoLiveElaine/ProjectGoLive/server/router"
+import (
+	"ProjectGoLiveElaine/ProjectGoLive/server/router"
+)
 
 func main() {
 	router.SetUp()

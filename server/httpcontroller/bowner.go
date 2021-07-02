@@ -2,22 +2,12 @@ package httpcontroller
 
 import (
 	"ProjectGoLiveElaine/ProjectGoLive/server/database"
+	"ProjectGoLiveElaine/ProjectGoLive/server/session"
 	"database/sql"
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
 )
-
-type BOwnerCredentials struct {
-	Email    string
-	Password string
-}
-
-type BOwnerDetails struct {
-	Email    string
-	Password string
-	Contact  string
-}
 
 func ProcessBOwnerRegistration(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 	if r.Header.Get("Content-type") == "application/json" {
@@ -28,10 +18,10 @@ func ProcessBOwnerRegistration(w http.ResponseWriter, r *http.Request, db *sql.D
 				w.Write([]byte("Unable to process request"))
 				return
 			}
-			var bOwner BOwnerDetails
+			var bOwner database.BOwner
 			json.Unmarshal(reqBody, &bOwner)
 			c := make(chan error)
-			go database.AddBOwner(db, bOwner.Email, bOwner.Password, bOwner.Contact, c)
+			go database.AddBOwner(db, bOwner.Id, bOwner.Email, bOwner.Password, bOwner.Contact, c)
 			err = <-c
 			if err != nil {
 				w.WriteHeader(http.StatusUnauthorized)
@@ -53,7 +43,7 @@ func ProcessBOwnerLogin(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 				w.Write([]byte("Unable to process request"))
 				return
 			}
-			var bOwner BOwnerCredentials
+			var bOwner database.BOwnerCredentials
 			json.Unmarshal(reqBody, &bOwner)
 			c := make(chan error)
 			go database.VerifyBOwnerIdentity(db, bOwner.Email, bOwner.Password, c)
@@ -63,8 +53,10 @@ func ProcessBOwnerLogin(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 				w.Write([]byte("Username or/and password does not match"))
 				return
 			}
-			//http.SetCookie(w, myCookie)
-			//w.Header().Add("myCookie", signedToken)
+			myToken := session.GenerateToken(bOwner.Email, "bowner")
+			myCookie := session.GenerateCookie(myToken)
+			http.SetCookie(w, myCookie)
+			//w.Header().Add("myCookie", myToken)
 			w.WriteHeader(http.StatusOK)
 			//myToken := GenerateToken()
 			//http.SetCookie(w, myToken)

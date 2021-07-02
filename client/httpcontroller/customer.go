@@ -10,15 +10,15 @@ import (
 )
 
 type Customer struct {
+	Id       int
 	Email    string
 	Username string
 	Password string
-	Token    string
 }
 
-func ProcessCustomerRegistration(customer map[string]string, c chan error) {
+func ProcessCustomerRegistration(customer Customer, c chan error) {
 	customerJSON, _ := json.Marshal(customer)
-	response, err := http.Post(baseURL+"/customer/register", "application/json", bytes.NewBuffer(customerJSON))
+	response, err := http.Post(BaseURL+"/customer/register", "application/json", bytes.NewBuffer(customerJSON))
 	if err != nil {
 		c <- err
 		return
@@ -35,17 +35,11 @@ func ProcessCustomerRegistration(customer map[string]string, c chan error) {
 
 func ProcessCustomerLogin(credentials map[string]string, c chan error) {
 	credentialsJSON, _ := json.Marshal(credentials)
-	response, err := http.Post(baseURL+"/customer/login", "application/json", bytes.NewBuffer(credentialsJSON))
+	response, err := http.Post(BaseURL+"/customer/login", "application/json", bytes.NewBuffer(credentialsJSON))
 	if err != nil {
 		c <- err
 		return
 	}
-	//defer response.Body.Close()
-	fmt.Println("response code:", response.StatusCode)
-	//myHeader := response.Header
-	//fmt.Println("RESPONSE HEADER:", myHeader.Get("myCookie"))
-	responseCookie := response.Cookies()
-	fmt.Println("GET COOKIE FROM SERVER:", responseCookie)
 	if response.StatusCode != http.StatusOK {
 		defer response.Body.Close()
 		data, _ := ioutil.ReadAll(response.Body)
@@ -53,6 +47,12 @@ func ProcessCustomerLogin(credentials map[string]string, c chan error) {
 		fmt.Println("err on processlogin function:", err)
 		c <- err
 		return
+	}
+	responseCookies := response.Cookies()
+	for _, cookie := range responseCookies {
+		if cookie.Name == "myCookie" {
+			MyCookie = cookie
+		}
 	}
 	c <- nil
 }

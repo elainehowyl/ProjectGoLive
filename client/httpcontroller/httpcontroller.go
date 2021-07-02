@@ -3,7 +3,7 @@ package httpcontroller
 import "net/http"
 
 var (
-	baseURL  = "http://localhost:5000"
-	myCookie *http.Cookie
-	client   http.Client
+	BaseURL  = "http://localhost:5000"
+	MyCookie *http.Cookie
+	Client   http.Client
 )

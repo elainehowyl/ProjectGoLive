@@ -33,6 +33,9 @@ func SetUp() {
 	r.HandleFunc("/customer/register", func(w http.ResponseWriter, r *http.Request) {
 		httpcontroller.ProcessCustomerRegistration(w, r, db)
 	})
+	r.HandleFunc("/listing/add", func(w http.ResponseWriter, r *http.Request) {
+		httpcontroller.ProcessAddListing(w, r, db)
+	})
 	r.HandleFunc("/favicon.ico", http.NotFound)
 	http.ListenAndServe(":5000", r)
 }

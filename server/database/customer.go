@@ -15,10 +15,21 @@ type Customer struct {
 	Password string
 }
 
-func AddCustomer(db *sql.DB, email, password, username string, c chan error) {
+type CustomerCredentials struct {
+	Email    string
+	Password string
+}
+
+type CustomerDetails struct {
+	Email    string
+	Username string
+	Password string
+}
+
+func AddCustomer(db *sql.DB, id int, email, password, username string, c chan error) {
 	title := "Register"
 	encryptedpw, _ := bcrypt.GenerateFromPassword([]byte(password), bcrypt.MinCost)
-	_, err := db.Exec("INSERT INTO proj_db.Customer VALUES(?,?,?,?)", 0, email, username, encryptedpw)
+	_, err := db.Exec("INSERT INTO proj_db.Customer VALUES(?,?,?,?)", id, email, username, encryptedpw)
 	if err != nil {
 		log.Printf("%v: %v\n", title, err)
 		c <- err
@@ -64,3 +75,5 @@ func VerifyCustomerIdentity(db *sql.DB, email string, password string, c chan er
 	log.Printf("%v: customer verification passed", title)
 	c <- nil
 }
+
+func GetCustomerData()

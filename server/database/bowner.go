@@ -15,10 +15,21 @@ type BOwner struct {
 	Contact  string
 }
 
-func AddBOwner(db *sql.DB, email, password, contact string, c chan error) {
+type BOwnerCredentials struct {
+	Email    string
+	Password string
+}
+
+type BOwnerDetails struct {
+	Id      int
+	Email   string
+	Contact string
+}
+
+func AddBOwner(db *sql.DB, id int, email, password, contact string, c chan error) {
 	title := "Register"
 	encryptedpw, _ := bcrypt.GenerateFromPassword([]byte(password), bcrypt.MinCost)
-	_, err := db.Exec("INSERT INTO proj_db.BOwner VALUES(?,?,?,?)", 0, email, encryptedpw, contact)
+	_, err := db.Exec("INSERT INTO proj_db.BOwner VALUES(?,?,?,?)", id, email, encryptedpw, contact)
 	if err != nil {
 		log.Printf("%v: %v\n", title, err)
 		c <- err

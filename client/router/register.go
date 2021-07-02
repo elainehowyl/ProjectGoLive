@@ -30,10 +30,11 @@ func RegisterCustomer(w http.ResponseWriter, r *http.Request) {
 		errorsList, passed = validator.FormValidatorForRegistration(formValues)
 		errorsList, passed2 = sanitizer.RegistrationSanitization(formValues, errorsList)
 		if passed && passed2 {
-			newCustomer := map[string]string{
-				"email":    r.FormValue("customer_email"),
-				"username": r.FormValue("customer_username"),
-				"password": r.FormValue("customer_password"),
+			newCustomer := httpcontroller.Customer{
+				Id:       0,
+				Email:    r.FormValue("customer_email"),
+				Username: r.FormValue("customer_username"),
+				Password: r.FormValue("customer_password"),
 			}
 			c := make(chan error)
 			go httpcontroller.ProcessCustomerRegistration(newCustomer, c)
@@ -71,10 +72,11 @@ func RegisterBOwner(w http.ResponseWriter, r *http.Request) {
 		errorsList, passed = validator.FormValidatorForRegistration(formValues)
 		errorsList, passed2 = sanitizer.RegistrationSanitization(formValues, errorsList)
 		if passed && passed2 {
-			newBowner := map[string]string{
-				"email":    r.FormValue("bowner_email"),
-				"contact":  r.FormValue("bowner_contact"),
-				"password": r.FormValue("bowner_password"),
+			newBowner := httpcontroller.BOwner{
+				ID:       0,
+				Email:    r.FormValue("bowner_email"),
+				Contact:  r.FormValue("bowner_contact"),
+				Password: r.FormValue("bowner_password"),
 			}
 			c := make(chan error)
 			go httpcontroller.ProcessBOwnerRegistration(newBowner, c)

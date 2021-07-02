@@ -2,22 +2,23 @@ package httpcontroller
 
 import (
 	"ProjectGoLiveElaine/ProjectGoLive/server/database"
+	"ProjectGoLiveElaine/ProjectGoLive/server/session"
 	"database/sql"
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
 )
 
-type CustomerCredentials struct {
-	Email    string
-	Password string
-}
+// type CustomerCredentials struct {
+// 	Email    string
+// 	Password string
+// }
 
-type CustomerDetails struct {
-	Email    string
-	Username string
-	Password string
-}
+// type CustomerDetails struct {
+// 	Email    string
+// 	Username string
+// 	Password string
+// }
 
 func ProcessCustomerRegistration(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 	if r.Header.Get("Content-type") == "application/json" {
@@ -28,10 +29,10 @@ func ProcessCustomerRegistration(w http.ResponseWriter, r *http.Request, db *sql
 				w.Write([]byte("Unable to process request"))
 				return
 			}
-			var customer CustomerDetails
+			var customer database.Customer
 			json.Unmarshal(reqBody, &customer)
 			c := make(chan error)
-			go database.AddCustomer(db, customer.Email, customer.Password, customer.Username, c)
+			go database.AddCustomer(db, customer.Id, customer.Email, customer.Password, customer.Username, c)
 			err = <-c
 			if err != nil {
 				w.WriteHeader(http.StatusUnauthorized)
@@ -53,7 +54,7 @@ func ProcessCustomerLogin(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 				w.Write([]byte("Unable to process request"))
 				return
 			}
-			var customer CustomerCredentials
+			var customer database.CustomerCredentials
 			json.Unmarshal(reqBody, &customer)
 			c := make(chan error)
 			go database.VerifyCustomerIdentity(db, customer.Email, customer.Password, c)
@@ -63,11 +64,10 @@ func ProcessCustomerLogin(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 				w.Write([]byte("Username or/and password does not match"))
 				return
 			}
-			//http.SetCookie(w, myCookie)
-			//w.Header().Add("myCookie", signedToken)
+			myToken := session.GenerateToken(customer.Email, "customer")
+			myCookie := session.GenerateCookie(myToken)
+			http.SetCookie(w, myCookie)
 			w.WriteHeader(http.StatusOK)
-			//myToken := GenerateToken()
-			//http.SetCookie(w, myToken)
 		}
 	}
 }

@@ -20,6 +20,7 @@ func AddListing(w http.ResponseWriter, r *http.Request) {
 		shopTitle := r.FormValue("shop_title")
 		shopDescription := r.FormValue("shop_description")
 		category := r.FormValue("shop_category")
+		categoryInt, _ := strconv.Atoi(category)
 		igURL := r.FormValue("ig_url")
 		fbURL := r.FormValue("fb_url")
 		websiteURL := r.FormValue("website_url")
@@ -35,15 +36,25 @@ func AddListing(w http.ResponseWriter, r *http.Request) {
 		}
 		errsList, passed = validator.GeneralFormValidator(formValues)
 		if passed {
-			listing := map[string]interface{}{
-				"shop_title":       shopTitle,
-				"shop_description": shopDescription,
-				"ig_url":           igURL,
-				"fb_url":           fbURL,
-				"website_url":      websiteURL,
-				"bowner_id":        0,
-				"category_id":      category,
+			listing := httpcontroller.Listing{
+				Id:              0,
+				ShopTitle:       shopTitle,
+				ShopDescription: shopDescription,
+				IgURL:           igURL,
+				FbURL:           fbURL,
+				WebsiteURL:      websiteURL,
+				BownerID:        0,
+				CategoryID:      categoryInt,
 			}
+			// listing := map[string]interface{}{
+			// 	"shop_title":       shopTitle,
+			// 	"shop_description": shopDescription,
+			// 	"ig_url":           igURL,
+			// 	"fb_url":           fbURL,
+			// 	"website_url":      websiteURL,
+			// 	"bowner_id":        0,
+			// 	"category_id":      category,
+			// }
 			c := make(chan error)
 			go httpcontroller.ProcessAddListing(listing, c)
 			err := <-c
@@ -112,6 +123,9 @@ func ViewMyListing(w http.ResponseWriter, r *http.Request) {
 
 func EditItem(w http.ResponseWriter, r *http.Request) {
 	errorsList := make(map[string]string)
+	params := mux.Vars(r)
+	itemId := params["item_id"]
+	listingId := params["listing_id"]
 	if r.Method == http.MethodPost {
 		itemName := r.FormValue("edit_item_name")
 		itemPrice := r.FormValue("edit_item_price")
@@ -133,10 +147,10 @@ func EditItem(w http.ResponseWriter, r *http.Request) {
 				"item_name":        itemName,
 				"item_price":       itemPriceInFloat * 100,
 				"item_description": itemDescription,
-				"listing_id":       0,
+				"listing_id":       listingId,
 			}
 			c := make(chan error)
-			go httpcontroller.ProcessAddItem(itemDetails, c)
+			go httpcontroller.ProcessUpdateItem(itemId, itemDetails, c)
 			err = <-c
 			if err != nil {
 				errorsList["response_error"] = err.Error()
