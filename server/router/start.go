@@ -11,7 +11,7 @@ import (
 )
 
 func SetUp() {
-	db, err := sql.Open("mysql", "root:password@tcp(127.0.0.1:61307)/proj_db")
+	db, err := sql.Open("mysql", "root:password@tcp(127.0.0.1:49519)/proj_db")
 	if err != nil {
 		log.Panicln(err.Error())
 		//panic(err.Error())
@@ -21,20 +21,39 @@ func SetUp() {
 	}
 	defer db.Close()
 	r := mux.NewRouter()
-	r.HandleFunc("/bowner/login", func(w http.ResponseWriter, r *http.Request) {
+	r.HandleFunc("/login", func(w http.ResponseWriter, r *http.Request) {
 		httpcontroller.ProcessBOwnerLogin(w, r, db)
 	})
-	r.HandleFunc("/customer/login", func(w http.ResponseWriter, r *http.Request) {
-		httpcontroller.ProcessCustomerLogin(w, r, db)
-	})
-	r.HandleFunc("/bowner/register", func(w http.ResponseWriter, r *http.Request) {
+	r.HandleFunc("/register", func(w http.ResponseWriter, r *http.Request) {
 		httpcontroller.ProcessBOwnerRegistration(w, r, db)
 	})
-	r.HandleFunc("/customer/register", func(w http.ResponseWriter, r *http.Request) {
-		httpcontroller.ProcessCustomerRegistration(w, r, db)
+	r.HandleFunc("/logout", httpcontroller.ProcessBOwnerLogout)
+	r.HandleFunc("/listings", func(w http.ResponseWriter, r *http.Request) {
+		httpcontroller.GetAllListings(w, r, db)
 	})
-	r.HandleFunc("/listing/add", func(w http.ResponseWriter, r *http.Request) {
+	r.HandleFunc("/listing/{id}", func(w http.ResponseWriter, r *http.Request) {
+		httpcontroller.GetOneListingPublic(w, r, db)
+	})
+	r.HandleFunc("/listing/{id}/review/add", func(w http.ResponseWriter, r *http.Request) {
+		httpcontroller.ProcessAddReview(w, r, db)
+	})
+	r.HandleFunc("/profile/{email}", func(w http.ResponseWriter, r *http.Request) {
+		httpcontroller.RetrieveBOwnerInfo(w, r, db)
+	})
+	r.HandleFunc("/{email}/listing/add", func(w http.ResponseWriter, r *http.Request) {
 		httpcontroller.ProcessAddListing(w, r, db)
+	})
+	r.HandleFunc("/{email}/listing/{listing_id}/view", func(w http.ResponseWriter, r *http.Request) {
+		httpcontroller.GetOneListing(w, r, db)
+	})
+	r.HandleFunc("/{email}/listing/{listing_id}/delete", func(w http.ResponseWriter, r *http.Request) {
+		httpcontroller.ProcessDeleteListing(w, r, db)
+	})
+	r.HandleFunc("/{email}/listing/{listing_id}/item/add", func(w http.ResponseWriter, r *http.Request) {
+		httpcontroller.ProcessAddItem(w, r, db)
+	})
+	r.HandleFunc("/{email}/listing/{listing_id}/item/{item_id}/delete", func(w http.ResponseWriter, r *http.Request) {
+		httpcontroller.ProcessDeleteItem(w, r, db)
 	})
 	r.HandleFunc("/favicon.ico", http.NotFound)
 	http.ListenAndServe(":5000", r)

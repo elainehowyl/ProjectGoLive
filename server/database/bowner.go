@@ -1,6 +1,7 @@
 package database
 
 import (
+	"ProjectGoLiveElaine/ProjectGoLive/server/model"
 	"database/sql"
 	"errors"
 	"log"
@@ -8,28 +9,28 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-type BOwner struct {
-	Id       int
-	Email    string
-	Password string
-	Contact  string
-}
+// type BOwner struct {
+// 	Id       int
+// 	Email    string
+// 	Password string
+// 	Contact  string
+// }
 
-type BOwnerCredentials struct {
-	Email    string
-	Password string
-}
+// type BOwnerCredentials struct {
+// 	Email    string
+// 	Password string
+// }
 
-type BOwnerDetails struct {
-	Id      int
-	Email   string
-	Contact string
-}
+// type BOwnerDetails struct {
+// 	Id      int
+// 	Email   string
+// 	Contact string
+// }
 
-func AddBOwner(db *sql.DB, id int, email, password, contact string, c chan error) {
+func AddBOwner(db *sql.DB, email, password, contact string, c chan error) {
 	title := "Register"
 	encryptedpw, _ := bcrypt.GenerateFromPassword([]byte(password), bcrypt.MinCost)
-	_, err := db.Exec("INSERT INTO proj_db.BOwner VALUES(?,?,?,?)", id, email, encryptedpw, contact)
+	_, err := db.Exec("INSERT INTO proj_db.BOwner VALUES(?,?,?)", email, encryptedpw, contact)
 	if err != nil {
 		log.Printf("%v: %v\n", title, err)
 		c <- err
@@ -49,9 +50,9 @@ func VerifyBOwnerIdentity(db *sql.DB, email string, password string, c chan erro
 		return
 	}
 	// get result
-	var credentials BOwner
+	var credentials model.BOwner
 	for result.Next() {
-		err = result.Scan(&credentials.Id, &credentials.Email, &credentials.Password, &credentials.Contact)
+		err = result.Scan(&credentials.Email, &credentials.Password, &credentials.Contact)
 		if err != nil {
 			log.Printf("%v: %v\n", title, err)
 			c <- err
@@ -75,4 +76,32 @@ func VerifyBOwnerIdentity(db *sql.DB, email string, password string, c chan erro
 	}
 	log.Printf("%v: business owner verification passed\n", title)
 	c <- nil
+}
+
+func GetBOwnerData(db *sql.DB, email string, c chan *model.BOwnerData) {
+	title := "Retrieve Business Owner Info"
+	// query := `SELECT BOwner.id, email, contact, Listing.id, shop_title, shop_description, ig_url, fb_url, website_url, Category.id, title
+	// FROM BOwner
+	// JOIN Listing ON BOwner.id=Listing.bowner_id
+	// JOIN Category ON Category.id=Listing.category_id
+	// WHERE email=?`
+	query := `SELECT email, contact FROM BOwner WHERE email=?`
+	result, err := db.Query(query, email)
+	if err != nil {
+		log.Printf("%v: %v\n", title, err)
+		c <- nil
+		return
+	}
+	//var details model.BOwnerDetails
+	var data model.BOwnerData
+	for result.Next() {
+		err = result.Scan(&data.Email, &data.Contact)
+		if err != nil {
+			log.Printf("%v: %v\n", title, err)
+			c <- nil
+			return
+		}
+	}
+	log.Printf("%v: successfully retrieved business owner's details", title)
+	c <- &data
 }

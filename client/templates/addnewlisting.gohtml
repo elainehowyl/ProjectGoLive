@@ -21,7 +21,7 @@
       <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
         <div class="navbar-nav" style="text-align:center">
           <a class="nav-link" href="/bowner/email">Profile</a>
-          <a class="nav-link" href="/">Logout</a>
+          <a class="nav-link" href="/logout">Logout</a>
         </div>
       </div>
     </nav>
@@ -45,12 +45,10 @@
                 <textarea class="form-control" id="shop_description" rows="3" name="shop_description" placeholder="A short description about your shop"></textarea>
                 <p style="color:red">{{.shop_description}}</p>
               </div>
-              <div>
-                <label for="shop_category">Category</label>
-                <select class="form-control" name="shop_category">
-                  <option value="category_id1">Tidbits</option>
-                  <option value="category_id2">Dim Sum</option>
-                </select>
+              <div class="form-group">
+                <label for="shop_category">Shop Category</label>
+                <input type="text" class="form-control" id="shop_category" name="shop_category" autocomplete="off">
+                <p style="color:red">{{.shop_category}}</p>
               </div>
             </div>
             <div class="mb-5">

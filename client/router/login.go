@@ -27,28 +27,14 @@ func Login(w http.ResponseWriter, r *http.Request) {
 				"email":    r.FormValue("login_email"),
 				"password": r.FormValue("login_password"),
 			}
-			fmt.Println("ROLE FROM FORM: ", r.FormValue("role"))
-			if r.FormValue("role") == "customer" {
-				c := make(chan error)
-				go httpcontroller.ProcessCustomerLogin(loginCredentials, c)
-				err := <-c
-				if err != nil {
-					fmt.Println("Response Error on login:", err)
-					errorsList["response_error"] = err.Error()
-				} else {
-					http.Redirect(w, r, "/", http.StatusSeeOther)
-				}
-			}
-			if r.FormValue("role") == "bowner" {
-				c := make(chan error)
-				go httpcontroller.ProcessBOwnerLogin(loginCredentials, c)
-				err := <-c
-				if err != nil {
-					fmt.Println("Response Error on login", err)
-					errorsList["response_error"] = err.Error()
-				} else {
-					http.Redirect(w, r, "/", http.StatusSeeOther)
-				}
+			c := make(chan error)
+			go httpcontroller.ProcessBOwnerLogin(loginCredentials, c)
+			err := <-c
+			if err != nil {
+				fmt.Println("Response Error on login", err)
+				errorsList["response_error"] = err.Error()
+			} else {
+				http.Redirect(w, r, "/bowner/"+loginCredentials["email"], http.StatusSeeOther)
 			}
 		}
 	}

@@ -22,17 +22,13 @@
       <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
         <div class="navbar-nav" style="text-align:center">
           <a class="nav-link" href="/">All</a>
-          <a class="nav-link" href="#">Category Name 1</a>
-          <a class="nav-link" href="#">Category Name 2</a>
-          <a class="nav-link" href="#">Category Name 3</a>
-          <a class="nav-link" href="#">Category Name 4</a>
           <div class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              More
+              For Business Owner
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
               <a class="dropdown-item" href="/login">Login</a>
-              <a class="dropdown-item" href="/register/customer">Register</a>
+              <a class="dropdown-item" href="/register">Register</a>
             </div>
           </div>
         </div>
@@ -51,18 +47,6 @@
           <input type="password" class="form-control" id="password" name="login_password" autocomplete="off">
           <p style="color:red">{{.login_password}}</p>
         </div>
-        <div class="form-check">
-          <input class="form-check-input" type="radio" name="role" id="customer" value="customer" checked>
-          <label class="form-check-label" for="role">
-            Customer
-          </label>
-        </div>
-        <div class="form-check">
-          <input class="form-check-input" type="radio" name="role" id="bowner" value="bowner">
-          <label class="form-check-label" for="role">
-            Business Owner
-          </label>
-        </div>
         <div>
           <p style="color:red">{{.response_error}}</p>
         </div>
@@ -71,7 +55,7 @@
         </div>
       </form><br>
       <div style="text-align:center">
-        <a href="/register/customer">Don't have an account? Register now</a>
+        <a href="/register">Don't have an account? Register now</a>
       </div>
     </div>
     

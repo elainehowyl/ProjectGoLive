@@ -16,3 +16,6 @@
 
 # SSL Certificates
 *.pem
+
+# Environment Variables File
+*.env

@@ -1,29 +1,36 @@
 package session
 
 import (
+	"ProjectGoLiveElaine/ProjectGoLive/client/envfile"
 	"net/http"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
-	uuid "github.com/satori/go.uuid"
 )
+
+type CookieInfo struct {
+	Email    string
+	MyCookie *http.Cookie
+}
 
 var (
-	TrackSessions = make(map[string]string)
+	//TrackSessions = make(map[string]string)
+	TrackSessions = make(map[string]CookieInfo)
 )
 
-func GenerateToken(email, role string) string {
-	MY_SECRET_KEY, _ := uuid.NewV4()
+func GenerateToken(email string) string {
+	mySigningKey := envfile.RetrieveEnv("MY_SECRET_KEY")
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"email": email,
-		"role":  role,
+		"authorized": true,
+		"email":      email,
 	})
-	signedToken, _ := token.SignedString([]byte(MY_SECRET_KEY.String()))
+	signedToken, _ := token.SignedString([]byte(mySigningKey))
 	return signedToken
 }
 
 func GenerateCookie(signedToken string) *http.Cookie {
-	expiration := time.Now().Add(15 * time.Minute)
+	//expiration := time.Now().Add(15 * time.Minute)
+	expiration := time.Now().Add(10 * time.Second)
 	myCookie := &http.Cookie{
 		Name:     "myCookie",
 		Value:    signedToken,
@@ -44,3 +51,5 @@ func CookieExpired(cookie *http.Cookie) bool {
 	}
 	return false
 }
+
+///delete(user.MapSessions, myCookie.Value)
